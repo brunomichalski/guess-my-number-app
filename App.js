@@ -5,10 +5,21 @@ import { LinearGradient } from "expo-linear-gradient";
 import GameScreen from "./src/screens/GameScreen";
 import GameOverScreen from "./src/screens/GameOverScreen";
 import Colors from "./src/constants/colors";
+import { useFonts } from "expo-font";
+import AppLoading from "expo-app-loading";
 
 export default function App() {
   const [useNumber, setUseNumber] = useState();
   const [gameIsOver, setGameIsOver] = useState(false);
+
+  const [fontsLoaded] = useFonts({
+    "open-sans": require("./src/assets/fonts/OpenSans-Regular.ttf"),
+    "open-sans-bold": require("./src/assets/fonts/OpenSans-Bold.ttf"),
+  });
+
+  if (!fontsLoaded) {
+    return <AppLoading />;
+  }
 
   function pickedNumberHandler(pickedNumber) {
     setUseNumber(pickedNumber);
