@@ -110,6 +110,7 @@ const style = StyleSheet.create({
   screen: {
     flex: 1, // Certifique-se de que o container principal ocupe toda a tela
     padding: 30,
+    alignItems: 'center'
   },
   instructionText: {
     marginBottom: 12,
