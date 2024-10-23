@@ -7,6 +7,7 @@ import GameOverScreen from "./src/screens/GameOverScreen";
 import Colors from "./src/constants/colors";
 import { useFonts } from "expo-font";
 import AppLoading from "expo-app-loading";
+import { StatusBar } from "expo-status-bar";
 
 export default function App() {
   const [useNumber, setUseNumber] = useState();
@@ -42,23 +43,32 @@ export default function App() {
     screen = <GameScreen userNumber={useNumber} onGameOver={gameOverHandler} />;
   }
   if (gameIsOver && useNumber) {
-    screen = <GameOverScreen userNumber={useNumber} roundsNumber={guessRounds} onStartNewGame={startNewGameHandler}/>;
+    screen = (
+      <GameOverScreen
+        userNumber={useNumber}
+        roundsNumber={guessRounds}
+        onStartNewGame={startNewGameHandler}
+      />
+    );
   }
 
   return (
-    <LinearGradient
-      colors={[Colors.primary700, Colors.accent500]}
-      style={styles.rootScreen}
-    >
-      <ImageBackground
-        source={require("./src/assets/images/background.png")}
-        resizeMode="cover"
+    <>
+      <StatusBar style="light"/>
+      <LinearGradient
+        colors={[Colors.primary700, Colors.accent500]}
         style={styles.rootScreen}
-        imageStyle={styles.backgroundImage}
       >
-        <SafeAreaView style={styles.rootScreen}>{screen}</SafeAreaView>
-      </ImageBackground>
-    </LinearGradient>
+        <ImageBackground
+          source={require("./src/assets/images/background.png")}
+          resizeMode="cover"
+          style={styles.rootScreen}
+          imageStyle={styles.backgroundImage}
+        >
+          <SafeAreaView style={styles.rootScreen}>{screen}</SafeAreaView>
+        </ImageBackground>
+      </LinearGradient>
+    </>
   );
 }
 

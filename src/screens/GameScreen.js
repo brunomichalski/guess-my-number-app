@@ -1,4 +1,11 @@
-import { View, StyleSheet, Alert, Text, FlatList } from "react-native";
+import {
+  View,
+  StyleSheet,
+  Alert,
+  Text,
+  FlatList,
+  useWindowDimensions,
+} from "react-native";
 import { useState, useEffect } from "react";
 import Title from "../components/ui/Title";
 import NumberContainer from "../components/game/NumberContainer";
@@ -25,6 +32,7 @@ function StartGame({ userNumber, onGameOver }) {
   const initialGuess = generateRandomBetween(1, 100, userNumber);
   const [currentGuess, setCurrentGuess] = useState(initialGuess);
   const [guessRounds, setGuessRounds] = useState([initialGuess]);
+  const { height, width } = useWindowDimensions();
 
   useEffect(() => {
     minBoundary = 1;
@@ -63,9 +71,8 @@ function StartGame({ userNumber, onGameOver }) {
 
   const guessRoundsListLength = guessRounds.length;
 
-  return (
-    <View style={style.screen}>
-      <Title>Opponent's Guess</Title>
+  let content = (
+    <>
       <NumberContainer>{currentGuess}</NumberContainer>
       <Card>
         <InstructionText style={style.instructionText}>
@@ -84,23 +91,45 @@ function StartGame({ userNumber, onGameOver }) {
           </View>
         </View>
       </Card>
+    </>
+  );
+
+  if (width > 500) {
+    content = (
+      <>
+        <View style={style.buttonsContainerWide}>
+          <View style={style.buttonContainer}>
+            <PrimaryBotton onPress={nextGuessHandler.bind(this, "lower")}>
+              <Ionicons name="remove" size={24} color="white" />
+            </PrimaryBotton>
+          </View>
+          <NumberContainer>{currentGuess}</NumberContainer>
+          <View style={style.buttonContainer}>
+            <PrimaryBotton onPress={nextGuessHandler.bind(this, "grater")}>
+              <Ionicons name="add" size={24} color="white" />
+            </PrimaryBotton>
+          </View>
+        </View>
+      </>
+    );
+  }
+
+  return (
+    <View style={style.screen}>
+      <Title>Opponent's Guess</Title>
+      {content}
       <View style={style.listContainer}>
-        {/* {guessRounds.map((guessround) => (
-          <Text key={guessround}>
-            {guessround}
-          </Text>
-        ))} */}
         <FlatList
-      data={guessRounds}
-      renderItem={(itemData) => (
-        <GuessLogItem
-          roundNumber={guessRoundsListLength - itemData.index}
-          guess={itemData.item}
+          data={guessRounds}
+          renderItem={(itemData) => (
+            <GuessLogItem
+              roundNumber={guessRoundsListLength - itemData.index}
+              guess={itemData.item}
+            />
+          )}
+          keyExtractor={(item) => item.toString()}
+          showsVerticalScrollIndicator={false}
         />
-      )}
-      keyExtractor={(item) => item.toString()} // Certifique-se de que a key seja uma string
-      showsVerticalScrollIndicator={false} // Remova se quiser ver a barra de rolagem
-    />
       </View>
     </View>
   );
@@ -110,7 +139,7 @@ const style = StyleSheet.create({
   screen: {
     flex: 1, // Certifique-se de que o container principal ocupe toda a tela
     padding: 30,
-    alignItems: 'center'
+    alignItems: "center",
   },
   instructionText: {
     marginBottom: 12,
@@ -124,8 +153,11 @@ const style = StyleSheet.create({
   listContainer: {
     flex: 1, // Isso garante que a FlatList ocupe o espaço restante
     padding: 16,
+  },
+  buttonsContainerWide:{
+    flexDirection: 'row',
+    alignItems: "center"
   }
 });
-
 
 export default StartGame;
